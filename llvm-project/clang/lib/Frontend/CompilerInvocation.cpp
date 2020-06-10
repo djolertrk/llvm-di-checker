@@ -791,6 +791,14 @@ static bool ParseCodeGenArgs(CodeGenOptions &Opts, ArgList &Args, InputKind IK,
       llvm::is_contained(DebugEntryValueArchs, T.getArch()))
     Opts.EmitCallSiteInfo = true;
 
+  Opts.EnableDIChecker =  Args.hasArg(OPT_fenable_di_checker);
+  if (Args.hasArg(OPT_fexport_di_checker_info)) {
+    // Ignore the option if the -fenable-di-checker wasn't enabled.
+    if (Opts.EnableDIChecker)
+      Opts.DICheckerFilename =
+          std::string(Args.getLastArgValue(OPT_fexport_di_checker_info));
+  }
+
   Opts.DisableO0ImplyOptNone = Args.hasArg(OPT_disable_O0_optnone);
   Opts.DisableRedZone = Args.hasArg(OPT_disable_red_zone);
   Opts.IndirectTlsSegRefs = Args.hasArg(OPT_mno_tls_direct_seg_refs);

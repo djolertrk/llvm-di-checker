@@ -27,6 +27,7 @@ static_library("IR") {
     "DIBuilder.cpp",
     "DataLayout.cpp",
     "DebugInfo.cpp",
+    "DebugInfoChecker.cpp",
     "DebugInfoMetadata.cpp",
     "DebugLoc.cpp",
     "DiagnosticHandler.cpp",

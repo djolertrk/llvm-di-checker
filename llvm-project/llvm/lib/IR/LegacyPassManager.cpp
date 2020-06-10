@@ -30,6 +30,7 @@
 #include "llvm/Support/TimeProfiler.h"
 #include "llvm/Support/Timer.h"
 #include "llvm/Support/raw_ostream.h"
+
 #include <algorithm>
 #include <unordered_set>
 using namespace llvm;
@@ -1316,7 +1317,7 @@ Pass *AnalysisResolver::findImplPass(Pass *P, AnalysisID AnalysisPI,
 // FunctionPassManager implementation
 
 /// Create new Function pass manager
-FunctionPassManager::FunctionPassManager(Module *m) : M(m) {
+llvm::legacy::FunctionPassManager::FunctionPassManager(Module *m) : M(m) {
   FPM = new FunctionPassManagerImpl();
   // FPM is the top level manager.
   FPM->setTopLevelManager(FPM);
@@ -1325,11 +1326,11 @@ FunctionPassManager::FunctionPassManager(Module *m) : M(m) {
   FPM->setResolver(AR);
 }
 
-FunctionPassManager::~FunctionPassManager() {
+llvm::legacy::FunctionPassManager::~FunctionPassManager() {
   delete FPM;
 }
 
-void FunctionPassManager::add(Pass *P) {
+void llvm::legacy::FunctionPassManager::add(Pass *P) {
   FPM->add(P);
 }
 
@@ -1337,7 +1338,7 @@ void FunctionPassManager::add(Pass *P) {
 /// track of whether any of the passes modifies the function, and if
 /// so, return true.
 ///
-bool FunctionPassManager::run(Function &F) {
+bool llvm::legacy::FunctionPassManager::run(Function &F) {
   handleAllErrors(F.materialize(), [&](ErrorInfoBase &EIB) {
     report_fatal_error("Error reading bitcode file: " + EIB.message());
   });
@@ -1347,13 +1348,13 @@ bool FunctionPassManager::run(Function &F) {
 
 /// doInitialization - Run all of the initializers for the function passes.
 ///
-bool FunctionPassManager::doInitialization() {
+bool llvm::legacy::FunctionPassManager::doInitialization() {
   return FPM->doInitialization(*M);
 }
 
 /// doFinalization - Run all of the finalizers for the function passes.
 ///
-bool FunctionPassManager::doFinalization() {
+bool llvm::legacy::FunctionPassManager::doFinalization() {
   return FPM->doFinalization(*M);
 }
 
@@ -1706,24 +1707,60 @@ bool PassManagerImpl::run(Module &M) {
 // PassManager implementation
 
 /// Create new pass manager
-PassManager::PassManager() {
+llvm::legacy::PassManager::PassManager() {
   PM = new PassManagerImpl();
   // PM is the top level manager
   PM->setTopLevelManager(PM);
 }
 
-PassManager::~PassManager() {
+llvm::legacy::PassManager::~PassManager() {
   delete PM;
 }
 
-void PassManager::add(Pass *P) {
+void llvm::legacy::PassManager::add(Pass *P) {
   PM->add(P);
 }
 
 /// run - Execute all of the passes scheduled for execution.  Keep track of
 /// whether any of the passes modifies the module, and if so, return true.
-bool PassManager::run(Module &M) {
+bool llvm::legacy::PassManager::run(Module &M) {
   return PM->run(M);
+}
+
+//===----------------------------------------------------------------------===//
+// CustomPassManager implementation
+//
+
+void CustomPassManager::add(Pass *P) {
+  // Wrap each pass with (-check)-debugify passes if requested, making
+  // exceptions for passes which shouldn't see -debugify instrumentation.
+  bool WrapWithDebugInfoChecker = DebugInfoCheckerEnabled &&
+                                  !P->getAsImmutablePass() &&
+                                  !isIRPrintingPass(P);
+
+  if (!WrapWithDebugInfoChecker) {
+    PassManager::add(P);
+    return;
+  }
+
+  StringRef Name = P->getPassName();
+
+  PassManager::add(createCollectDICheckerModulePass(Name, &DIPreservationMap));
+  PassManager::add(P);
+  PassManager::add(createCheckDICheckerModulePass(Name, &DIPreservationMap,
+                                                  getDICheckerFilePath()));
+}
+
+void CustomPassManager::enableDebugInfoChecker() {
+  DebugInfoCheckerEnabled = true;
+}
+
+void CustomPassManager::setDICheckerFilePath(StringRef DICheckerFile) {
+  DICheckerFilePath = DICheckerFile;
+}
+
+StringRef CustomPassManager::getDICheckerFilePath() const {
+  return DICheckerFilePath;
 }
 
 //===----------------------------------------------------------------------===//

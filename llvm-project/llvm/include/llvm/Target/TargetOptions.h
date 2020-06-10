@@ -290,6 +290,10 @@ namespace llvm {
     /// production.
     bool ShouldEmitDebugEntryValues() const;
 
+    // TODO: Add the checking for the Machine IR level.
+    // /// Enable Debug Info preservation checking.
+    // /// bool EnableDIChecker : 1;
+
     /// Emit DWARF debug frame section.
     unsigned ForceDwarfFrameSection : 1;
 

@@ -389,6 +389,12 @@ def fdebug_pass_manager : Flag<["-"], "fdebug-pass-manager">,
     HelpText<"Prints debug information for the new pass manager">;
 def fno_debug_pass_manager : Flag<["-"], "fno-debug-pass-manager">,
     HelpText<"Disables debug printing for the new pass manager">;
+def fenable_di_checker : Flag<["-"], "fenable-di-checker">,
+    HelpText<"Enable Debug Info Checker.">;
+def fexport_di_checker_info : Joined<["-"], "fexport-di-checker-info=">,
+    MetaVarName<"<file>">,
+    HelpText<"Export Debug Info Checker failures into specified (JSON) file "
+             "(should be abs path).">;
 // The driver option takes the key as a parameter to the -msign-return-address=
 // and -mbranch-protection= options, but CC1 has a separate option so we
 // don't have to parse the parameter twice.

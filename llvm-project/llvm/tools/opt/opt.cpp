@@ -28,6 +28,7 @@
 #include "llvm/Config/llvm-config.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DebugInfo.h"
+#include "llvm/IR/DebugInfoChecker.h"
 #include "llvm/IR/IRPrintingPasses.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/LLVMRemarkStreamer.h"
@@ -332,6 +333,7 @@ cl::opt<std::string> CSProfileGenFile(
 
 class OptCustomPassManager : public legacy::PassManager {
   DebugifyStatsMap DIStatsMap;
+  DebugInfoPerPassMap DIPreservationMap;
 
 public:
   using super = legacy::PassManager;
@@ -341,15 +343,31 @@ public:
     // exceptions for passes which shouldn't see -debugify instrumentation.
     bool WrapWithDebugify = DebugifyEach && !P->getAsImmutablePass() &&
                             !isIRPrintingPass(P) && !isBitcodeWriterPass(P);
-    if (!WrapWithDebugify) {
+
+    bool WrapWithDebugInfoChecker =
+        llvm::codegen::getEnableDIChecker() &&
+        !P->getAsImmutablePass() && !isIRPrintingPass(P) &&
+        !isBitcodeWriterPass(P);
+
+    if (!WrapWithDebugify && !WrapWithDebugInfoChecker) {
       super::add(P);
+      return;
+    }
+
+    StringRef Name = P->getPassName();
+
+    // Debug Info checker for the -g generated debugging information
+    // preservation.
+    if (WrapWithDebugInfoChecker) {
+      super::add(createCollectDICheckerModulePass(Name, &DIPreservationMap));
+      super::add(P);
+      super::add(createCheckDICheckerModulePass(Name, &DIPreservationMap));
       return;
     }
 
     // Apply -debugify/-check-debugify before/after each pass and collect
     // debug info loss statistics.
     PassKind Kind = P->getPassKind();
-    StringRef Name = P->getPassName();
 
     // TODO: Implement Debugify for LoopPass.
     switch (Kind) {
@@ -370,6 +388,9 @@ public:
   }
 
   const DebugifyStatsMap &getDebugifyStatsMap() const { return DIStatsMap; }
+  const DebugInfoPerPassMap &getDebugInfoPerPassMap() const {
+    return DIPreservationMap;
+  }
 };
 
 static inline void addPass(legacy::PassManagerBase &PM, Pass *P) {

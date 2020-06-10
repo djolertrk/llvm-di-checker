@@ -116,6 +116,8 @@ bool getEmitCallSiteInfo();
 
 bool getEnableDebugEntryValues();
 
+bool getEnableDIChecker();
+
 bool getForceDwarfFrameSection();
 
 /// Create this object with static storage to register codegen-related command

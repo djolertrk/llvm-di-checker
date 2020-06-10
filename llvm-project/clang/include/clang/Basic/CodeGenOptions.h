@@ -155,6 +155,9 @@ public:
   /// The ABI to use for passing floating point arguments.
   std::string FloatABI;
 
+  /// The file to use for dumping Debug Info Checker report.
+  std::string DICheckerFilename;
+
   /// The floating-point denormal mode to use.
   llvm::DenormalMode FPDenormalMode = llvm::DenormalMode::getIEEE();
 

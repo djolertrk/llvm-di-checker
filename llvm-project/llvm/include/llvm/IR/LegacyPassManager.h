@@ -19,6 +19,8 @@
 #include "llvm/Pass.h"
 #include "llvm/Support/CBindingWrapping.h"
 
+#include "llvm/IR/DebugInfoChecker.h"
+
 namespace llvm {
 
 class Pass;
@@ -90,6 +92,20 @@ public:
 private:
   FunctionPassManagerImpl *FPM;
   Module *M;
+};
+
+/// CustomPassManager for the DIChecker.
+class CustomPassManager : public legacy::PassManager {
+public:
+  void add(Pass *P) override;
+  void enableDebugInfoChecker();
+  void setDICheckerFilePath(StringRef DICheckerFile);
+  llvm::StringRef getDICheckerFilePath() const;
+
+private:
+  DebugInfoPerPassMap DIPreservationMap;
+  llvm::StringRef DICheckerFilePath = "";
+  bool DebugInfoCheckerEnabled = false;
 };
 
 } // End legacy namespace

@@ -498,6 +498,8 @@ static void initTargetOptions(llvm::TargetOptions &Options,
   Options.EmitAddrsig = CodeGenOpts.Addrsig;
   Options.ForceDwarfFrameSection = CodeGenOpts.ForceDwarfFrameSection;
   Options.EmitCallSiteInfo = CodeGenOpts.EmitCallSiteInfo;
+  // TODO: Add the checking for the Machine IR level.
+  // Options.EnableDIChecker = CodeGenOpts.EnableDIChecker;
 
   Options.MCOptions.SplitDwarfFile = CodeGenOpts.SplitDwarfFile;
   Options.MCOptions.MCRelaxAll = CodeGenOpts.RelaxAll;
@@ -851,7 +853,14 @@ void EmitAssemblyHelper::EmitAssembly(BackendAction Action,
   if (TM)
     TheModule->setDataLayout(TM->createDataLayout());
 
-  legacy::PassManager PerModulePasses;
+  legacy::CustomPassManager PerModulePasses;
+  if (CodeGenOpts.EnableDIChecker) {
+    PerModulePasses.enableDebugInfoChecker();
+
+    if (!CodeGenOpts.DICheckerFilename.empty())
+      PerModulePasses.setDICheckerFilePath(CodeGenOpts.DICheckerFilename);
+  }
+
   PerModulePasses.add(
       createTargetTransformInfoWrapperPass(getTargetIRAnalysis()));
 

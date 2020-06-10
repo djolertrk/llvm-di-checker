@@ -85,6 +85,7 @@ CGOPT(bool, EnableStackSizeSection)
 CGOPT(bool, EnableAddrsig)
 CGOPT(bool, EmitCallSiteInfo)
 CGOPT(bool, EnableDebugEntryValues)
+CGOPT(bool, EnableDIChecker)
 CGOPT(bool, ForceDwarfFrameSection)
 
 codegen::RegisterCodeGenFlags::RegisterCodeGenFlags() {
@@ -399,6 +400,12 @@ codegen::RegisterCodeGenFlags::RegisterCodeGenFlags() {
       cl::init(false));
   CGBINDOPT(EnableDebugEntryValues);
 
+  static cl::opt<bool>
+      EnableDIChecker("di-checker",
+      cl::desc("Check the preservation of original Debug Info after each pass"),
+      cl::init(false));
+  CGBINDOPT(EnableDIChecker);
+
   static cl::opt<bool> ForceDwarfFrameSection(
       "force-dwarf-frame-section",
       cl::desc("Always emit a debug frame section."), cl::init(false));
@@ -469,6 +476,8 @@ TargetOptions codegen::InitTargetOptionsFromCodeGenFlags() {
   Options.EmitAddrsig = getEnableAddrsig();
   Options.EmitCallSiteInfo = getEmitCallSiteInfo();
   Options.EnableDebugEntryValues = getEnableDebugEntryValues();
+  // TODO: Add the checking for the Machine IR level.
+  // Options.EnableDIChecker = getEnableDIChecker();
   Options.ForceDwarfFrameSection = getForceDwarfFrameSection();
 
   Options.MCOptions = mc::InitMCTargetOptionsFromFlags();
