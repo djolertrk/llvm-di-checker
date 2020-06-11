@@ -130,5 +130,7 @@ This section will show the usage of the tool on the real example such as GDB 7.1
        Globals Alias Analysis: PASS
        ...
 
+7) As a final step, the case could be reduced per suggestions from: https://djolertrk.github.io/llvm-debug-info-blog/ (section: How to reduce a test case using LLVM bugpoint?)
+
 The tool has found **17924** cases that may indicate bugs within compiler.
 
