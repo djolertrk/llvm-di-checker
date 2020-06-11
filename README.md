@@ -117,5 +117,18 @@ This section will show the usage of the tool on the real example such as GDB 7.1
        $ $PATH_TO_DI_CHECKER_BUILD/di-checker.py ~/gdb-report-bugs.json gdb-report-bugs.html
 5) Please take a look at the example (actually piece of the page) of the ``gdb-report-bugs.html`` at: https://djolertrk.github.io/di-checker-html-report-example/
 
+6) A particular case could be examined by using the ``-fenable-di-checker`` option only on the file where the bug occured (so we can see what is the instruction(s) that caused the problem)
+
+       $ clang -g -O2 -Wno-error -Xclang -fenable-di-checker   -I. -I../../gdb-source/gdb ... ../../gdb-source/gdb/p-valprint.c
+       ...
+       Promote Memory to Register: PASS
+       Dead Argument Elimination: PASS
+         ***ERROR: Combine redundant instructions dropped DILocation for the   %7 = zext i1 %6 to i32 (BB name: no-name) from file: ../../gdb-source/gdb/p-valprint.c
+       Combine redundant instructions: FAIL
+         ***ERROR: Simplify the CFG dropped DILocation for the   br label %133 (BB name: no-name) from file: ../../gdb-source/gdb/p-valprint.c
+       Simplify the CFG: FAIL
+       Globals Alias Analysis: PASS
+       ...
+
 The tool has found **17924** cases that may indicate bugs within compiler.
 
