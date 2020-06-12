@@ -4,7 +4,7 @@ The ``LLVM DI Checker`` checks Debug Info Preservation in Optimizations.
 
 NOTE: This is based on LLVM project and the patches could applied on the 872c5fb14324 commit.
 
-The idea is to create a tool (utility; LLVM Pass) that checks the preservation of the debug info metadata after optimization passes. An alternative to this is the ``debugify`` utility, but the diference is that the ``LLVM DI Checker`` deals with real debug info, rather than with the syntetic ones (artifitial ones; basically, the ``debugify`` generates syntetic debug info before a pass and checks if that was preserved after the pass).
+The idea is to create a tool (utility; LLVM Pass) that checks the preservation of the debug info metadata after optimization passes. An alternative to this is the ``debugify`` utility, but the difference is that the ``LLVM DI Checker`` deals with real debug info, rather than with the syntetic ones (artifitial ones; basically, the ``debugify`` generates syntetic debug info before a pass and checks if that was preserved after the pass).
 
 ## How it works?
 
@@ -31,7 +31,7 @@ Please consider the page: https://llvm.org/docs/GettingStarted.html for addition
 
 There are several ways of using it, either from ``opt`` or from ``clang``.
 
-1) From the ``opt`` tool and 
+1) From the ``opt`` tool 
 
         $ opt -O2 -di-checker test.ll -S -o test-processed.ll
         Force set function attributes: PASS
@@ -82,7 +82,7 @@ There are several ways of using it, either from ``opt`` or from ``clang``.
         Loop Invariant Code Motion: PASS
         ...
 
-2) From the ``opt`` tool by outputing the failures into the ``json`` file (The ``json`` file conatins per line JSON objects that is parsed by the ``di-checker.py`` for the purpose of generating an HTML page with the data).
+2) From the ``opt`` tool by outputing the failures into the ``json`` file (The ``json`` file conatins per line JSON objects that is parsed by the ``di-checker.py`` for the purpose of generating an HTML page with the data.)
 
         $ opt -O2 -di-checker -di-checker-export=test.json test.ll -S -o test-processed.ll
         ...
