@@ -115,7 +115,7 @@ This section will show the usage of the tool on the real example such as GDB 7.1
 4) Generate the HTML page with the data about bugs
 
        $ $PATH_TO_DI_CHECKER_BUILD/di-checker.py ~/gdb-report-bugs.json gdb-report-bugs.html
-5) Please take a look at the example (actually piece of the page) of the ``gdb-report-bugs.html`` at: https://djolertrk.github.io/di-checker-html-report-example/
+5) Please take a look at the example of the ``gdb-report-bugs.html`` at: https://djolertrk.github.io/di-checker-html-report-example/
 
 6) A particular case could be examined by using the ``-fenable-di-checker`` option only on the file where the bug occured (so we can see what is the instruction(s) that caused the problem)
 
