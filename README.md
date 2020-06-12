@@ -2,7 +2,7 @@
 
 The ``LLVM DI Checker`` checks Debug Info Preservation in Optimizations.
 
-NOTE: This is based on LLVM project and the patches could be applied on the 872c5fb14324 commit.
+NOTE: This is based on LLVM project and the patches could be applied on top of the 872c5fb14324 commit.
 
 The idea is to create a tool (utility; LLVM Pass) that checks the preservation of the debug info metadata after optimization passes. An alternative to this is the ``debugify`` utility, but the difference is that the ``LLVM DI Checker`` deals with real debug info, rather than with the synthetic ones (artificial ones; basically, the ``debugify`` generates synthetic debug info before a pass and checks if that was preserved after the pass).
 
