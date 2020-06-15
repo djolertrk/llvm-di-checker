@@ -105,7 +105,7 @@ def generate_html_report(di_location_bugs, di_subprogram_bugs, \
   table_di_loc_sum += table_title_di_loc_sum
   table_di_loc_sum += "</b></caption>\n"
 
-  header_di_loc_sum = ["LLVM Pass Name", "Number of bugs"]
+  header_di_loc_sum = ["LLVM Pass Name", "Number of cases found"]
   table_di_loc_sum += "  <tr>\n"
 
   for column in header_di_loc_sum:
@@ -136,7 +136,7 @@ def generate_html_report(di_location_bugs, di_subprogram_bugs, \
   table_di_sp = "<table>\n"
 
   # Create the table's column headers.
-  table_title_di_sp = "SP Bugs found by the LLVM DI Checker"
+  table_title_di_sp = "Subprogram Bugs found by the LLVM DI Checker"
   table_di_sp += "<caption><b>"
   table_di_sp += table_title_di_sp
   table_di_sp += "</b></caption>\n"
@@ -187,12 +187,12 @@ def generate_html_report(di_location_bugs, di_subprogram_bugs, \
   table_di_sp_sum = "<table>\n"
 
   # Create the table's column headers.
-  table_title_di_sp_sum = "DI Checker Summary of SP Bugs"
+  table_title_di_sp_sum = "DI Checker Summary of Subprogram Bugs"
   table_di_sp_sum += "<caption><b>"
   table_di_sp_sum += table_title_di_sp_sum
   table_di_sp_sum += "</b></caption>\n"
 
-  header_di_sp_sum = ["LLVM Pass Name", "Number of bugs"]
+  header_di_sp_sum = ["LLVM Pass Name", "Number of cases found"]
   table_di_sp_sum += "  <tr>\n"
 
   for column in header_di_sp_sum:
