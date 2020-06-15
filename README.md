@@ -14,6 +14,8 @@ Furthermore, it is implemented as an IR pass, but it can handle (with some extra
 
 The report about the bugs have been found is printed out on the ``std::err`` or into the ``json`` file. The ``json`` file could be further on processed, and as a final result we can have an HTML page representing the information about the bugs. Please find more details below.
 
+NOTE: There should not be false positive cases reported.
+
 ## Building the LLVM DI Checker
 
 Steps we recommend for GNU/Linux (or any Unix) OS:
