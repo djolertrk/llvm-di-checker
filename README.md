@@ -4,7 +4,7 @@ The ``LLVM DI Checker`` checks Debug Info Preservation in Optimizations.
 
 NOTE: This is based on LLVM project and the patches could be applied on top of the 872c5fb14324 commit.
 
-The idea is to create a tool (utility; LLVM Pass) that checks the preservation of the debug info metadata after optimization passes. An alternative to this is the ``debugify`` utility, but the difference is that the ``LLVM DI Checker`` deals with real debug info, rather than with the synthetic ones (artificial ones; basically, the ``debugify`` generates synthetic debug info before a pass and checks if that was preserved after the pass).
+The idea is to create a tool (utility; LLVM Pass) that checks the preservation of the debug info metadata after optimization passes. An alternative to this is the ``debugify`` utility, but the difference is that the ``LLVM DI Checker`` deals with real debug info, rather than with the synthetic ones (basically, the ``debugify`` generates synthetic debug info before a pass and checks if that was preserved after the pass).
 
 ## How it works?
 
@@ -104,7 +104,7 @@ Or,
 
 ### Using the LLVM DI Checker on GDB project (version 7.11)
 
-This section will show the usage of the tool on the real example such as GDB 7.11.
+This section will show the usage of the tool on the large source code, such as GDB 7.11.
 
 1) Download the source code of the GDB 7.11 from https://www.gnu.org/software/gdb/
 2) Set up build dir and run the ``make``
@@ -117,7 +117,7 @@ This section will show the usage of the tool on the real example such as GDB 7.1
        $ $PATH_TO_DI_CHECKER_BUILD/di-checker.py ~/gdb-report-bugs.json gdb-report-bugs.html
 5) Please take a look at the example of the ``gdb-report-bugs.html`` at: https://djolertrk.github.io/di-checker-html-report-example/
 
-6) A particular case could be examined by using the ``-fenable-di-checker`` option only on the file where the bug occured (so we can see what is the instruction(s) that caused the problem)
+6) A particular case could be examined by using the ``-fenable-di-checker`` option only on the file where the bug occured (so we can see the instruction(s) that caused the problem)
 
        $ clang -g -O2 -Wno-error -Xclang -fenable-di-checker   -I. -I../../gdb-source/gdb ... ../../gdb-source/gdb/p-valprint.c
        ...
@@ -131,6 +131,3 @@ This section will show the usage of the tool on the real example such as GDB 7.1
        ...
 
 7) As a final step, the case could be reduced per suggestions from: https://djolertrk.github.io/llvm-debug-info-blog/ (section: How to reduce a test case using LLVM bugpoint?)
-
-The tool has found **17924** cases that may indicate bugs within compiler.
-
