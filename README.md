@@ -133,3 +133,5 @@ This section will show the usage of the tool on the large source code, such as G
        ...
 
 7) As a final step, the case could be reduced per suggestions from: https://djolertrk.github.io/llvm-debug-info-blog/ (section: How to reduce a test case using LLVM bugpoint?)
+
+# This is not part of LLVM: https://llvm.org/docs/HowToUpdateDebugInfo.html#test-original-debug-info-preservation-in-optimizations
